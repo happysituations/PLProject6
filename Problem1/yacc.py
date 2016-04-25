@@ -8,6 +8,29 @@ DEBUG = True
 # Namespace & built-in functions
 
 name = {}
+d_let = {}
+
+def let_sub(l):
+    if not isinstance(l, list):
+        if l in d_let:
+            return d_let[l]
+        return l
+    if len(l) == 1:
+        return [let_sub(l[0])]
+    return [let_sub( l[0] )] + let_sub( l[1:] )
+
+def let(l):
+    d_let[l[0][0]] = l[0][1]
+    list_subbed = let_sub(l[1])
+    res = 0
+    if isinstance(list_subbed, list):
+        res = lisp_eval(list_subbed[0], list_subbed[1:])
+    else:
+        res = list_subbed
+    del d_let[l[0][0]]
+    return res
+
+name['let'] = let
 
 def cons(l):
     return [l[0]] + l[1]
@@ -60,6 +83,7 @@ def add(l):
     return sum(l)
 
 name['+'] = add
+name['add'] = add
 
 def minus(l):
     '''Unary minus'''
@@ -76,15 +100,16 @@ name['print'] = _print
 
 def lisp_eval(simb, items):
     if simb in name:
-        return call(name[simb], eval_lists(items))
+        return call(simb, eval_lists(items))
     else:
-       return [simb] + items
+        return [simb] + items
 
-def call(f, l):
+def call(simb, l):
+    f = name[simb]
     try:
-        return f(eval_lists(l))  
+        return f(eval_lists(l))
     except TypeError:
-        return f
+        return [simb] + l
 
 def eval_lists(l):
     r = []
@@ -166,7 +191,7 @@ def p_item_list(p):
 def p_item_list(p):
     'item : quoted_list'
     p[0] = p[1]
-        
+
 def p_item_call(p):
     'item : call'
     p[0] = p[1]
@@ -177,8 +202,8 @@ def p_item_empty(p):
 
 def p_call(p):
     'call : LPAREN SIMB items RPAREN'
-    if DEBUG: print "Calling", p[2], "with", p[3] 
-    p[0] = lisp_eval(p[2], p[3])   
+    if DEBUG: print "Calling", p[2], "with", p[3]
+    p[0] = lisp_eval(p[2], p[3])
 
 def p_atom_simbol(p):
     'atom : SIMB'
@@ -196,7 +221,7 @@ def p_atom_word(p):
     'atom : TEXT'
     p[0] = p[1]
 
-def p_atom_empty(p): 
+def p_atom_empty(p):
     'atom :'
     pass
 
