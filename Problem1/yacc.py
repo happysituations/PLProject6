@@ -20,6 +20,8 @@ def let_sub(l):
     return [let_sub( l[0] )] + let_sub( l[1:] )
 
 def let(l):
+    if len(l) == 1:
+        return l[0][1]
     d_let[l[0][0]] = l[0][1]
     list_subbed = let_sub(l[1])
     res = 0
@@ -86,10 +88,40 @@ name['+'] = add
 name['add'] = add
 
 def minus(l):
-    '''Unary minus'''
-    return -l[0]
+    #Unary minus
+    if len(l) == 1:
+        return -l[0]
+    if len(l) > 1:
+        return l[0]- sum(l[1:])
 
 name['-'] = minus
+name['minus'] = minus
+
+def multiply(l):
+    if len(l) == 1:
+        return l[0]
+    if len(l) > 1:
+        product = 1
+        for i in l:
+            product = product * i
+    return product
+
+name['*'] = multiply
+name['multiply'] = multiply
+
+def divide(l):
+    if len(l) == 1:
+        return l[0]
+    if len(l) > 1:
+        quotient = l[0]
+        for i in l[1:]:
+            if i == 0:
+                return "undefined"
+            quotient = quotient / i
+    return quotient
+
+name['/'] = divide
+name['divide'] = divide
 
 def _print(l):
     print lisp_str(l[0])
@@ -199,6 +231,26 @@ def p_item_call(p):
 def p_item_empty(p):
     'item : empty'
     p[0] = p[1]
+
+'''
+def p_let(p):
+    'call : LPAREN LET list arg RPAREN'
+    d_let[p[3][0]] = p[3][1]
+    list_subbed = let_sub(p[4])
+    if isinstance(list_subbed, list):
+        p[0] = lisp_eval(list_subbed[0], list_subbed[1:])
+    else:
+        p[0] = list_subbed
+    del d_let[p[3][0]]
+
+def p_arg_atom(p):
+    'arg : atom'
+    p[0] = p[1]
+
+def p_arg_list(p):
+    'arg : list'
+    p[0] = p[1]
+'''
 
 def p_call(p):
     'call : LPAREN SIMB items RPAREN'

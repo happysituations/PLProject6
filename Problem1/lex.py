@@ -13,14 +13,17 @@ tokens = ('QUOTE', 'SIMB', 'NUM', 'LPAREN', 'RPAREN', \
 # Reserved words
 reserved = {
     'nil' : 'NIL',
+    #'let' : 'LET',
 }
 
 # Regular expression rules for simple tokens
+#t_LET = r'let'
 t_LPAREN = r'\('
 t_RPAREN = r'\)'
 t_QUOTE = r'\''
 t_TRUE = r'\#t'
 t_FALSE = r'\#f'
+
 
 def t_NUM(t):
     r'\d+'
@@ -32,7 +35,7 @@ def t_NUM(t):
     return t
 
 def t_SIMB(t):
-    r'[a-zA-Z_+=\*\-][a-zA-Z0-9_+\*\-]*'
+    r'[a-zA-Z_+=\*\-/][a-zA-Z0-9_+\*\-/]*'
     t.type = reserved.get(t.value,'SIMB')    # Check for reserved words
     return t
 
