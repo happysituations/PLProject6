@@ -10,6 +10,13 @@ DEBUG = True
 name = {}
 d_let = {}
 
+def _if(l):
+    if l[0] == True:
+        return l[1]
+    if l[0] == False:
+        return l[2]
+name['if'] = _if
+
 def let_sub(l):
     if not isinstance(l, list):
         if l in d_let:
