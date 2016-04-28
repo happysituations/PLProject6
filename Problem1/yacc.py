@@ -125,12 +125,10 @@ def divide(l):
         return l[0]
     if len(l) > 1:
         quotient = l[0]
-        print(quotient)
         for i in l[1:]:
             if i == 0:
                 return "undefined"
             quotient = quotient / i
-            print(i)
     return quotient
 
 name['/'] = divide
