@@ -37,7 +37,7 @@ class MiniLisp(cmd.Cmd):     # See https://docs.python.org/2/library/cmd.html
         print("result is: ", result)
         import lis
         print lis.eval(result)
-        
+
         '''
         s = lisp_str(result)
         if s != 'nil':
