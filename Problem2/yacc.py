@@ -221,4 +221,7 @@ def p_error(p):
 # yacc.yacc(method="SLR")
 yacc.yacc()
 
+#Lisp (also most compilers) processes expressions in this workflow.
+#program(str) -> [parse] -> abstract syntax tree (list) -> [eval] -> result (object)
+
 
